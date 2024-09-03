@@ -2,10 +2,10 @@
 
 
 cdef class HierarchicalQuadTree:
-    cpdef Rectangle boundary
-    cpdef int capacity
-    cpdef public list quadtrees
-    cpdef float scale
+    cdef Rectangle boundary
+    cdef int capacity
+    cdef public list quadtrees
+    cdef float scale
     
     def __init__(self, Rectangle boundary, int capacity, float scale=2):
         self.boundary = boundary
@@ -37,7 +37,7 @@ cdef class HierarchicalQuadTree:
             return self.quadtrees.append((new_interval, new_qt))
     
     cpdef query(self, Point obj):
-        cpdef list results = []
+        cdef list results = []
         x, y = obj.get_position()
         obj_size = obj.get_size()
         for (large, small), qt in self.quadtrees:
@@ -47,16 +47,16 @@ cdef class HierarchicalQuadTree:
         return results
 
     cpdef does_collide(self, Circle circle):
-        cpdef list results = []
-        cpdef list objs = self.query(circle)
+        cdef list results = []
+        cdef list objs = self.query(circle)
         for obj in objs:
             if circle.collides_with(obj):
                 return True
         return False
 
     cpdef find_collisions(self, Circle circle):
-        cpdef list results = []
-        cpdef list objs = self.query(circle)
+        cdef list results = []
+        cdef list objs = self.query(circle)
         for obj in objs:
             if circle.collides_with(obj):
                 results.append(obj)
@@ -64,15 +64,15 @@ cdef class HierarchicalQuadTree:
 
 
 cdef class QuadTree():
-    cpdef Rectangle boundary
-    cpdef int capacity
-    cpdef int num_points
-    cpdef list points
-    cpdef public bint divided
-    cpdef public QuadTree northwest
-    cpdef public QuadTree northeast
-    cpdef public QuadTree southwest
-    cpdef public QuadTree southeast
+    cdef Rectangle boundary
+    cdef int capacity
+    cdef int num_points
+    cdef list points
+    cdef public bint divided
+    cdef public QuadTree northwest
+    cdef public QuadTree northeast
+    cdef public QuadTree southwest
+    cdef public QuadTree southeast
 
     def __init__(self, Rectangle boundary, int capacity):
         self.boundary = boundary
@@ -101,10 +101,10 @@ cdef class QuadTree():
                 return True
 
     cpdef subdivide(self):
-        cpdef double bx = self.boundary.x
-        cpdef double by = self.boundary.y
-        cpdef double qw = self.boundary.width / 2.
-        cpdef double qh = self.boundary.height / 2.
+        cdef double bx = self.boundary.x
+        cdef double by = self.boundary.y
+        cdef double qw = self.boundary.width / 2.
+        cdef double qh = self.boundary.height / 2.
 
         cdef Rectangle nw = Rectangle(bx, by, qw, qh)
         cdef Rectangle ne = Rectangle(bx + qw, by, qw, qh)
@@ -118,7 +118,7 @@ cdef class QuadTree():
         self.divided = True
 
     cpdef select(self, Rectangle rect):
-        cpdef list found = []
+        cdef list found = []
         if not self.boundary.intersects(rect):
             return found
         
@@ -136,7 +136,7 @@ cdef class QuadTree():
     cpdef Rectangle get_boundary(self):
         return self.boundary
 
-    cpdef list get_points(self):
+    cdef list get_points(self):
         points = []
         for point in self.points:
             points.append(point)
@@ -144,8 +144,8 @@ cdef class QuadTree():
 
 
 cdef class Point():
-    cpdef double x
-    cpdef double y
+    cdef double x
+    cdef double y
     def __init__(self, double x, double y):
         self.x = x
         self.y = y
@@ -158,7 +158,7 @@ cdef class Point():
 
 
 cdef class Circle(Point):
-    cpdef double radius
+    cdef double radius
 
     def __init__(self, double x, double y, double radius):
         self.x = x
@@ -175,14 +175,14 @@ cdef class Circle(Point):
         return f"<circle x={self.x} y={self.y} radius={self.radius}>"
     
     def collides_with(self, Circle circle):
-        cpdef double x_2
-        cpdef double y_2
-        cpdef double r_2
-        cpdef double x
-        cpdef double y
-        cpdef double r
-        cpdef double quadrance
-        cpdef double radius_square
+        cdef double x_2
+        cdef double y_2
+        cdef double r_2
+        cdef double x
+        cdef double y
+        cdef double r
+        cdef double quadrance
+        cdef double radius_square
 
         x_2, y_2, r_2 = circle.get_dimensions()
         x, y, r = self.x, self.y, self.radius
@@ -192,8 +192,8 @@ cdef class Circle(Point):
 
 
 cdef class Rectangle(Point):
-    cpdef double width
-    cpdef double height
+    cdef double width
+    cdef double height
     def __init__(self, double x, double y, double width, double height):
         self.x = x
         self.y = y
@@ -201,23 +201,23 @@ cdef class Rectangle(Point):
         self.height = height
 
     cpdef bint contains(self, Point point):
-        cpdef double px = point.x
-        cpdef double py = point.y
-        cpdef bint cond_x = self.x <= px < self.x + self.width
-        cpdef bint cond_y = self.y <= py < self.y + self.height
+        cdef double px = point.x
+        cdef double py = point.y
+        cdef bint cond_x = self.x <= px < self.x + self.width
+        cdef bint cond_y = self.y <= py < self.y + self.height
         return cond_x and cond_y
     
     cpdef bint intersects(self, Rectangle rect):
-        cpdef double x = self.x
-        cpdef double y = self.y
-        cpdef double width = self.width
-        cpdef double height = self.height
+        cdef double x = self.x
+        cdef double y = self.y
+        cdef double width = self.width
+        cdef double height = self.height
 
-        cpdef bint cond_1 = rect.x >= x + self.width
-        cpdef bint cond_2 = rect.x + rect.width < x
-        cpdef bint cond_3 = rect.y + rect.height < y
-        cpdef bint cond_4 = rect.y >= y + height
-        cpdef bint not_intersect = cond_1 or cond_2 or cond_3 or cond_4
+        cdef bint cond_1 = rect.x >= x + self.width
+        cdef bint cond_2 = rect.x + rect.width < x
+        cdef bint cond_3 = rect.y + rect.height < y
+        cdef bint cond_4 = rect.y >= y + height
+        cdef bint not_intersect = cond_1 or cond_2 or cond_3 or cond_4
         return not not_intersect
     
     cpdef (double, double, double, double) get_dimensions(self):

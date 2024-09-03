@@ -17,7 +17,7 @@ hqt.find_collisions(Circle(x=50, y=50, radius=4))
 # >>> []
 
 # faster results: return True if given Circle collides with any item:
-hqt.does_collide(Circle(x=50, y=50, radius=6))
+print(hqt.does_collide(Circle(x=50, y=50, radius=6)))
 # >>> True
-hqt.does_collide(Circle(x=50, y=50, radius=4))
+print(hqt.does_collide(Circle(x=50, y=50, radius=4)))
 # >>> False
